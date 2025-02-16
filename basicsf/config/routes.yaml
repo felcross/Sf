@@ -1,0 +1,43 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+
+
+#weather: 
+# resource: 'routes/weather.yaml'
+# prefix: '/weather'
+# name_prefix: 'App_'
+
+#home:
+#  path: /
+#  controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+#  defaults: 
+#   route: esse é o teste
+ #  permanent: false
+
+    
+
+
+
+
+#app_weather_highlandersays:
+ #   path: /weather/says/{param}
+  #  controller: App\Controller\WeatherController::highlanderSays
+   # methods:  GET 
+   # defaults:
+    #   param: 50
+     #   requirements: 
+      #     param: \d+
+
+
+    #app_weather_highlandersays:
+ #   path: /weather/says/{param}
+  #  controller: App\Controller\WeatherController::highlanderGuess
+   # methods:  GET 
+   # defaults:
+    #   param: 50
+
+    

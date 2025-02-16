@@ -1,0 +1,14 @@
+{% extends 'base.html.twig'  %}
+
+{% block title %}
+Meu TwigSf
+ {% endblock %}
+
+  {% block body %}
+  {% block h1 %}
+<h1>Static Says h1</h1>
+ {% endblock %}
+ <p>{{ msg|upper|raw}} </p>
+ {# comentario#}
+ <!-- this is an HTML comment -->
+ {% endblock %}
