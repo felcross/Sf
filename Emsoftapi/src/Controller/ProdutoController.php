@@ -28,16 +28,17 @@ class ProdutoController extends AbstractController
     }
 
    
-     #[Route("/emsoft/{filter}/{value}/{top}")]
-     public function getProdutoEMsoft(string $top, string $filter, string $value): Response
+     //#[Route("/emsoft/{filter}/{value}/{top}/{letra}")]
+     #[Route("/emsoft/{qtd}")]
+     public function getProdutoEMsoft(string $qtd = '0'): Response
     {                  
-      $teste = "?%24filter={$filter}%20eq%20{'$value'}&%24top={$top}";
-           
+          //  $url = "http://166.0.186.208:2002/emsoft/emauto/Produto?%24filter={$filter}%20eq%20{$value}&%24top={$top}";
+           // $url2 = 'http://166.0.186.208:2002/emsoft/emauto/ServiceEcommerce/ProdutosAlterados?pData=2024-10-10&pIntegrados=S&pRegistros=2&pPagina=0' ;
 
                                          
         $curl = curl_init();
         curl_setopt_array($curl, [
-            CURLOPT_URL => "http://166.0.186.208:2002/emsoft/emauto/Produto?%24filter={$filter}%20eq%20{$value}&%24top={$top}",
+            CURLOPT_URL => "http://166.0.186.208:2002/emsoft/emauto/Produto?%24filter=WEB%20eq%20'S'&%24top={$qtd}",
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_RETURNTRANSFER => true,
@@ -56,85 +57,100 @@ class ProdutoController extends AbstractController
 
          return $this->json([
         'message' => 'Data fetched successfully!',
-        'data' => $response ?? []
+        'data' =>  $response ?? []
        ]);
         
     }
 
 
 
-    #[Route("/api")]
-     public function getProdutoApi(): Response
+   #[Route("/logar")]
+     public function logarfastchannel():Response
     { 
-       $response =  $this->loginHelper->LoginApi();
+       // $this->loginHelper->LoginApi();
+
+        $this->loginHelper->LoginEmsoft();
+
+       return $this->json([
+        'message' => 'Data fetched successfully!',
+        
+       ]);
+   }
 
 
+    
 
-         return $this->json([
+    #[Route("/get")]
+     public function getProduto(): Response
+    { 
+
+        $paginacao = 'https://api.commerce.fastchannel.com/stock-management/v1/stock?PageNumber=1&PageSize=5';
+     
+ 
+       $curl = curl_init();
+       curl_setopt_array($curl, [
+           CURLOPT_URL =>   $paginacao ,
+           CURLOPT_CUSTOMREQUEST => 'GET',
+           CURLOPT_SSL_VERIFYPEER => false,
+           CURLOPT_RETURNTRANSFER => true,
+           CURLOPT_HTTPHEADER =>['Content-Type: application/json','Authorization: Bearer ' . $this->session->get('Token2'),'Subscription-Key:' . '4079282087f54f93b6f942245017a6d8'],
+           ]);
+  
+   $result = curl_exec($curl);
+
+   $response = json_decode($result,true);
+
+    curl_close($curl);
+
+    return $this->json([
         'message' => 'Data fetched successfully!',
         'data' => $response ?? []  
        ]);
         
-    }
+    }  
+
 
 
 
     
-    #[Route("/teste/{filter}/{value}/{top}/{letra}")]
-     public function get(string $top, string $filter, string $value,string $letra): Response
+    #[Route("/update")]
+     public function teste(): Response
     {        
-        
-          $teste = stripslashes("?%24filter={$filter}%20eq%20{$value}{$letra}%24top={$top}");
-          
-          //stripcslashes("?%24filter={$filter}%20eq%20{value}&%24top={$top}");
-               
-    
-
-         return $this->json([
-        'message' => 'Data fetched successfully!',
-        'data' => $teste ??  []
-       ]);
-        
-    }
-
-    #[Route("/logar")]
-    public function LoginCode(): Response
-    {
-        
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_URL => 'http://166.0.186.208:2002/emsoft/emauto/ServiceSistema/Login',
-            CURLOPT_CUSTOMREQUEST => 'POST',
+        $curl2 = curl_init();
+        curl_setopt_array($curl2, [
+            CURLOPT_URL => 'https://api.commerce.fastchannel.com/stock-management/v1/stock/31012653',
+            CURLOPT_CUSTOMREQUEST => 'PUT',
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER =>['Content-Type: application/json'],
-            CURLOPT_POSTFIELDS => json_encode(['usuario' => 'edson','senha' => 'chicosoft'])
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $this->session->get('Token2'),
+                'Subscription-Key: 4079282087f54f93b6f942245017a6d8'
+            ],CURLOPT_POSTFIELDS => json_encode(['StorageId'=> 23, 'Quantity' => 100])
+            //CURLOPT_POSTFIELDS =>    json_encode(['Quantity' => 100])
+        
             
         ]);
-   
-    $result = curl_exec($curl);
-
-    $response = json_decode($result,true);
-
-   $session = new Session();
-   $session->start();
-   $session->set('Token',$response['value']);
 
 
 
+        $result = curl_exec($curl2);
+        
+        $response = json_decode($result,true);
+        
+                  curl_close($curl2);
+                  
+          
+                 return $this->json([
+                'message' => 'Data fetched successfully!',
+                'data' => $response ?? []  
+               ]);
+          
+       
+    
 
-
-    //file_put_contents('C:\symfony-cli\Emsoftapi\var\log','Logsys.lock');
+        
+    }
 
  
-
-    curl_close($curl);
-
-    
-    return $this->json([
-        'message' => 'Data fetched successfully!',
-        'data' =>  $response['value'] ?? []
-       ]);
-
-    }
 }

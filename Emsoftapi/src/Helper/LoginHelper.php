@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class LoginHelper extends AbstractController
 {
     
-     public function LoginCode(): void
+     public function LoginEmsoft(): void
     {
         
         $curl = curl_init();
@@ -34,11 +34,6 @@ class LoginHelper extends AbstractController
    $session->start();
    $session->set('Token',$response['value']);
 
-
-
-
-
-    file_put_contents('C:\\symfony-cli\\Emsoftapi\\var\\log\\','Logsys.lock');
 
  
 
@@ -71,9 +66,9 @@ class LoginHelper extends AbstractController
 
     $response = json_decode($result,true);
 
-   //$session = new Session();
-   //$session->start();
-   //$session->set('Token2',$response['value']);
+   $session = new Session();
+   $session->start();
+   $session->set('Token2',$response['access_token']);
    
 
 
@@ -81,8 +76,6 @@ class LoginHelper extends AbstractController
  
 
     curl_close($curl);
-
-    return $response;
 
     }
 }
